@@ -18,6 +18,17 @@
 <script>
     var map;
     var activeMarkers = {};
+
+    var iconBase = "http://maps.google.com/mapfiles/ms/micons/"
+    var icons = {
+          moving: {
+            icon: iconBase + 'helicopter.png'
+          },
+          stopped: {
+            icon: iconBase + 'caution.png'
+          },
+        };
+
     var droneSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/drones/dashboard/');
@@ -27,12 +38,12 @@
         console.log(data);
         var newPos = new google.maps.LatLng(data['latitude'], data['longitude']);
 
-        console.log(map)
+        console.log(map);
 
         var droneId = parseInt(data['id']);
 
         if (!activeMarkers[droneId]) {
-             activeMarkers[droneId] = new google.maps.Marker({position: newPos, map: map});
+             activeMarkers[droneId] = new google.maps.Marker({position: newPos, map: map, icon: icons['moving'].icon});
         } else {
             activeMarkers[droneId].setPosition(newPos);
 
