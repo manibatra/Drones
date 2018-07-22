@@ -32,6 +32,7 @@
     function Drone(id, marker, lastSeen) {
         this.id = id;
         this.marker = marker;
+        this.state = 1;
         this.lastSeen = lastSeen
     }
 
@@ -64,11 +65,15 @@
              setInterval( function() {
                 if ((new Date() - activeMarkers[droneId].lastSeen) > 10000) {
                     activeMarkers[droneId].marker.setIcon(icons['stopped'].icon);
-                } else {
+                    activeMarkers[droneId].marker.setLabel("");
+                    activeMarkers[droneId].state = 0;
+                } else if (activeMarkers[droneId].state === 0) {
                     activeMarkers[droneId].marker.setIcon({
                 url: icons['moving'].icon,
                 labelOrigin: new google.maps.Point(60, 15)
                 });
+                activeMarkers[droneId].state = 1
+                activeMarkers[droneId].marker.setLabel((data['speed']/1000).toString() + " km/s");
                 }
             }, 1000)
         } else {
