@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Stimulator</title>
+</head>
+<body>
+    <input id="drones-location-submit" type="button" value="Send"/>
+</body>
+<script>
+
+    var droneSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/drones/stimulator/');
+
+
+    droneSocket.onclose = function(e) {
+        console.error('Drones socket closed unexpectedly');
+    };
+
+
+    document.querySelector('#drones-location-submit').onclick = function(e) {
+        droneSocket.send(JSON.stringify({
+            'message': '<current_location>'
+        }));
+    };
+</script>
+</html>
