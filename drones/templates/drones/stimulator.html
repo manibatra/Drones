@@ -60,6 +60,12 @@ table#t01 th {
         return num;
     }
 
+    // Random Bearing from 5000 to 15000 m/s
+    function generateRandomSpeed() {
+        var num = Math.round((Math.random()*(15000) + 5000)/1000)*1000;
+        return num;
+    }
+
     /**
   * Returns the destination point from a given point, having travelled the given distance
   * on the given initial bearing.
@@ -111,8 +117,8 @@ table#t01 th {
         this.id = id;
         this.lat = lat;
         this.long = long;
-        this.speed = 10000 //speed in m/s
-        this.bearing = generateRandomBearing()
+        this.speed = generateRandomSpeed(); //speed in m/s
+        this.bearing = generateRandomBearing();
         this.drone_location = function() {
             return this.id + " : " + this.lat + ", " + this.long;
         };
