@@ -49,14 +49,26 @@
         var droneId = parseInt(data['id']);
 
         if (!activeMarkers[droneId]) {
+            console.log(data['speed']);
 
-             var newMarker= new google.maps.Marker({position: newPos, map: map, icon: icons['moving'].icon});
+             var newMarker= new google.maps.Marker({
+                position: newPos,
+                map: map,
+                label: (data['speed']/1000).toString() + " km/s",
+                icon: {
+                url: icons['moving'].icon,
+                labelOrigin: new google.maps.Point(60, 15)
+                }
+                });
              activeMarkers[droneId]  = new Drone(droneId, newMarker, new Date());
              setInterval( function() {
                 if ((new Date() - activeMarkers[droneId].lastSeen) > 10000) {
                     activeMarkers[droneId].marker.setIcon(icons['stopped'].icon);
                 } else {
-                    activeMarkers[droneId].marker.setIcon(icons['moving'].icon);
+                    activeMarkers[droneId].marker.setIcon({
+                url: icons['moving'].icon,
+                labelOrigin: new google.maps.Point(60, 15)
+                });
                 }
             }, 1000)
         } else {
