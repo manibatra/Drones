@@ -111,7 +111,7 @@ table#t01 th {
         this.id = id;
         this.lat = lat;
         this.long = long;
-        this.speed = 10 //speed in m/s
+        this.speed = 10000 //speed in m/s
         this.bearing = generateRandomBearing()
         this.drone_location = function() {
             return this.id + " : " + this.lat + ", " + this.long;
@@ -136,7 +136,10 @@ table#t01 th {
             latCell.innerHTML = newCoordinates[0];
             longCell.innerHTML = newCoordinates[1];
             droneSocket.send(JSON.stringify({
-                'message': newDrone.id + " : " + newDrone.lat + ", " + newDrone.long
+                'id': currentId,
+                'lat': newDrone.lat,
+                'long': newDrone.long,
+                'speed': newDrone.speed
             }));
         }, 1000);
         var table = document.querySelector('#t01')
@@ -168,7 +171,10 @@ table#t01 th {
                                                 latCell.innerHTML = newCoordinates[0];
                                                 longCell.innerHTML = newCoordinates[1];
                                                 droneSocket.send(JSON.stringify({
-                                                    'message': currentId + " : " + currentDrone.lat + ", " + currentDrone.long
+                                                    'id': currentId,
+                                                    'lat': currentDrone.lat,
+                                                    'long': currentDrone.long,
+                                                    'speed': currentDrone.speed
                                                 }));
                                             }, 1000);
                 this.textContent = "Pause";

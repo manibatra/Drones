@@ -53,8 +53,15 @@ class DashboardConsumer(AsyncWebsocketConsumer):
     # Receive message from drone group
     async def drone_message(self, event):
         message = event['message']
+        identity = message['id']
+        latitude = message['lat']
+        longitude = message['long']
+        speed = message['speed']
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            'message': message
+            'id': identity,
+            'latitude': latitude,
+            'longitude': longitude,
+            'speed': speed
         }))

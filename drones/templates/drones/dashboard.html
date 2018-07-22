@@ -16,14 +16,28 @@
     <!--The div element for the map -->
     <div id="map"></div></body>
 <script>
+    var map;
+    var activeMarkers = {};
     var droneSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/drones/dashboard/');
 
     droneSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
-        var message = data['message'];
-        console.log(message);
+        console.log(data);
+        var newPos = new google.maps.LatLng(data['latitude'], data['longitude']);
+
+        console.log(map)
+
+        var droneId = parseInt(data['id']);
+
+        if (!activeMarkers[droneId]) {
+             activeMarkers[droneId] = new google.maps.Marker({position: newPos, map: map});
+        } else {
+            activeMarkers[droneId].setPosition(newPos);
+
+        }
+
     };
 
     droneSocket.onclose = function(e) {
@@ -35,10 +49,10 @@
       // The location of Uluru
       var uluru = {lat: -25.344, lng: 131.036};
       // The map, centered at Uluru
-      var map = new google.maps.Map(
+      map = new google.maps.Map(
           document.getElementById('map'), {zoom: 4, center: uluru});
       // The marker, positioned at Uluru
-      var marker = new google.maps.Marker({position: uluru, map: map});
+
     }
 
 
