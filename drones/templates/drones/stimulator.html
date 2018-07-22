@@ -127,9 +127,14 @@ table#t01 th {
         var newDrone = new Drone(id, generateRandomLat(), generateRandomLong());
         activeDrones[id] = newDrone
         activeDroneTimers[id] = setInterval(function() {
+            var currentId = parseInt(newDrone.id)
             var newCoordinates = destinationPoint(newDrone.lat, newDrone.long, newDrone.speed, newDrone.bearing);
             newDrone.lat = newCoordinates[0];
             newDrone.long = newCoordinates[1];
+            var latCell = document.querySelector('#t01').rows[currentId + 1].cells[1];
+            var longCell = document.querySelector('#t01').rows[currentId + 1].cells[2];
+            latCell.innerHTML = newCoordinates[0];
+            longCell.innerHTML = newCoordinates[1];
             droneSocket.send(JSON.stringify({
                 'message': newDrone.id + " : " + newDrone.lat + ", " + newDrone.long
             }));
@@ -158,6 +163,10 @@ table#t01 th {
                                                 var newCoordinates = destinationPoint(currentDrone.lat, currentDrone.long, currentDrone.speed, currentDrone.bearing);
                                                 currentDrone.lat = newCoordinates[0];
                                                 currentDrone.long = newCoordinates[1];
+                                                var latCell = document.querySelector('#t01').rows[currentId + 1].cells[1];
+                                                var longCell = document.querySelector('#t01').rows[currentId + 1].cells[2];
+                                                latCell.innerHTML = newCoordinates[0];
+                                                longCell.innerHTML = newCoordinates[1];
                                                 droneSocket.send(JSON.stringify({
                                                     'message': currentId + " : " + currentDrone.lat + ", " + currentDrone.long
                                                 }));
