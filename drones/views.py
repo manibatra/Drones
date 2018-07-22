@@ -7,3 +7,7 @@ def index(request):
 
 def stimulator(request):
 	return render(request, 'drones/stimulator.html', {})
+
+
+def dashboard(request):
+	return render(request, 'drones/dashboard.html', {})
