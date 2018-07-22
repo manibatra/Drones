@@ -1,0 +1,22 @@
+<!-- chat/templates/chat/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Drones</title>
+</head>
+<body>
+    What mode would you like to enter?<br/>
+    <button type="button" id="dashboard">Dashboard</button><br/>
+    <button type="button" id="stimulator">Stimulator</button>
+
+    <script>
+        document.querySelector('#dashboard').onclick = function(e) {
+            window.location.pathname = '/drones/dashboard/';
+        };
+        document.querySelector('#stimulator').onclick = function(e) {
+            window.location.pathname = '/drones/stimulator/';
+        };
+    </script>
+</body>
+</html>
