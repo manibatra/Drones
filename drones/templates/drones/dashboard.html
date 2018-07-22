@@ -29,23 +29,39 @@
           },
         };
 
+    function Drone(id, marker, lastSeen) {
+        this.id = id;
+        this.marker = marker;
+        this.lastSeen = lastSeen
+    }
+
     var droneSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/drones/dashboard/');
 
     droneSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
-        console.log(data);
+        // console.log(data);
         var newPos = new google.maps.LatLng(data['latitude'], data['longitude']);
 
-        console.log(map);
+        // console.log(map);
 
         var droneId = parseInt(data['id']);
 
         if (!activeMarkers[droneId]) {
-             activeMarkers[droneId] = new google.maps.Marker({position: newPos, map: map, icon: icons['moving'].icon});
+
+             var newMarker= new google.maps.Marker({position: newPos, map: map, icon: icons['moving'].icon});
+             activeMarkers[droneId]  = new Drone(droneId, newMarker, new Date());
+             setInterval( function() {
+                if ((new Date() - activeMarkers[droneId].lastSeen) > 10000) {
+                    activeMarkers[droneId].marker.setIcon(icons['stopped'].icon);
+                } else {
+                    activeMarkers[droneId].marker.setIcon(icons['moving'].icon);
+                }
+            }, 1000)
         } else {
-            activeMarkers[droneId].setPosition(newPos);
+            activeMarkers[droneId].lastSeen = new Date();
+            activeMarkers[droneId].marker.setPosition(newPos);
 
         }
 
