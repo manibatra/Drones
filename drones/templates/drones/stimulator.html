@@ -4,25 +4,119 @@
     <meta charset="utf-8"/>
     <title>Stimulator</title>
 </head>
+<style>
+    table, th, td {
+        border: 1px solid black;
+            border-collapse: collapse;
+
+    }
+
+    th {
+    text-align: left;
+    }
+
+    table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+    background-color: #fff;
+}
+table#t01 th {
+    color: white;
+    background-color: black;
+}
+</style>
 <body>
-    <input id="drones-location-submit" type="button" value="Send"/>
+    <table id="t01" style="width:100%">
+        <tr>
+            <th>Id</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Action</th>
+        </tr>
+    </table>
+    <button id="create-new-drone">Create a new drone</button>
 </body>
 <script>
+
+    var id = 0;
+    var activeDrones = {};
+    var activeDroneTimers = {};
+
+    // LONGITUDE 110 to  150
+    function generateRandomLong() {
+        var num = (Math.random()*(150 - 110) + 110).toFixed(3);
+        return num;
+    }
+    // LATITUDE -18 to -31
+    function generateRandomLat() {
+        var num = (Math.random()*(31 - 18) + 18).toFixed(3);
+        var posorneg = Math.floor(Math.random());
+        return num * -1;
+    }
+
 
     var droneSocket = new WebSocket(
         'ws://' + window.location.host +
         '/ws/drones/stimulator/');
+
+    function Drone(id, lat, long) {
+        this.id = id;
+        this.lat = lat;
+        this.long = long;
+        this.drone_location = function() {
+            return this.id + " : " + this.lat + ", " + this.long;
+        };
+    }
 
 
     droneSocket.onclose = function(e) {
         console.error('Drones socket closed unexpectedly');
     };
 
+    document.querySelector('#create-new-drone').onclick = function(e) {
+        var newDrone = new Drone(id, generateRandomLat(), generateRandomLong());
+        activeDrones[id] = newDrone
+        activeDroneTimers[id] = setInterval(function() {
+            droneSocket.send(JSON.stringify({
+                'message': newDrone.id + " : " + newDrone.lat + ", " + newDrone.long
+            }));
+        }, 1000);
+        var table = document.querySelector('#t01')
+        var row = table.insertRow(id + 1)
+        var idCell = row.insertCell(0)
+        var latCell = row.insertCell(1)
+        var lonCell = row.insertCell(2)
+        var actionCell = row.insertCell(3)
 
-    document.querySelector('#drones-location-submit').onclick = function(e) {
-        droneSocket.send(JSON.stringify({
-            'message': '<current_location>'
-        }));
+        idCell.innerHTML = newDrone.id
+        latCell.innerHTML = newDrone.lat
+        lonCell.innerHTML = newDrone.long
+
+        var actionButton = document.createElement("BUTTON");
+        var t = document.createTextNode("Pause");
+        actionButton.setAttribute('id', newDrone.id)
+        actionButton.appendChild(t);
+        actionButton.addEventListener("click", function(e) {
+            var currentId = parseInt(e.target.id)
+            if (!activeDroneTimers[currentId]) {
+                activeDroneTimers[currentId] = setInterval(function() {
+                                                droneSocket.send(JSON.stringify({
+                                                    'message': currentId + " : " + activeDrones[currentId].lat + ", " + activeDrones[currentId].long
+                                                }));
+                                            }, 1000);
+                this.textContent = "Pause";
+            } else {
+                clearInterval(activeDroneTimers[currentId])
+                activeDroneTimers[currentId] = null
+                this.textContent = "Play";
+            }
+        })
+        actionCell.appendChild(actionButton);
+
+        id++;
     };
+
+
 </script>
 </html>
