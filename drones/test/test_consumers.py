@@ -27,3 +27,4 @@ async def test_my_consumer():
                          "speed": 10}
     # Close
     await communicator.disconnect()
+    await d_communicator.disconnect()
