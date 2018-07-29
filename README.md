@@ -30,7 +30,7 @@ MAP_KEY=<API accesss key for Google Maps>
 DJANGO_SETTINGS_MODULE=mysite.settings
 ```
 
-The MAP_KEY is for viewing the google map on our dashboard and the DJANGO_SETTINGS_MODULE is for testings.
+The MAP_KEY is for viewing the google map on our dashboard and the DJANGO_SETTINGS_MODULE is for testing.
 Build the services using docker-compose
 
 ```
