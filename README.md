@@ -10,7 +10,7 @@ The goals of this project are the following :
 ---
 
 ## Overview of the Architecture
-<img src=“./images/architecture.png”>
+<img src="./images/architecture.png">
 
 ## Installation
 Make sure that you have the **docker** and **docker-compose** cli installed. 
@@ -47,7 +47,7 @@ docker-compose up
 ## Usage 
 The application will be available at **http://localhost:8000/drones/** . From there you can enter the **dashboard** and the drones **stimulator**. 
 
-<img src=“./images/app.png”>
+<img src="./images/app.png">
 
 Once you start creating drones from the stimulator they will start appearing on the dashboard. You can **pause** a drone to prevent it from sending it’s location. Once a drone has been paused it will be marked on the dashboard. A paused drone can be **play**ed again to being transmitting it’s location. The location of the drone is updated with every transmission by moving it in a  random direction with a random speed which is fixed when the drone is created. To start from scratch just refresh the dashboard and the stimulator. 
 
